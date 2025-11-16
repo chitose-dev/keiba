@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>競馬スクレイピング設定</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- ログイン画面 -->
+        <div id="login-screen" class="screen active">
+            <div class="card">
+                <h1>🏇 競馬スクレイピング設定</h1>
+                <p class="subtitle">管理画面にログインしてください</p>
+                
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="password">パスワード</label>
+                        <input type="password" id="password" placeholder="パスワードを入力" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">ログイン</button>
+                    
+                    <div id="login-error" class="error-message"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- メイン設定画面 -->
+        <div id="main-screen" class="screen">
+            <div class="header">
+                <h1>🏇 競馬スクレイピング設定</h1>
+                <button id="logout-btn" class="btn btn-secondary">ログアウト</button>
+            </div>
+
+            <div class="card">
+                <h2>🔧 API設定</h2>
+                
+                <div class="form-group">
+                    <label for="api-url">Cloud Run API URL</label>
+                    <input type="url" id="api-url" placeholder="https://your-service.run.app" required>
+                    <small>Cloud RunサービスのURL（deploy.sh実行後に表示されます）</small>
+                </div>
+
+                <button id="save-api-url" class="btn btn-primary">API URLを保存</button>
+                
+                <div id="api-url-success" class="success-message"></div>
+                <div id="api-url-error" class="error-message"></div>
+            </div>
+
+            <div class="card">
+                <h2>📊 基本設定</h2>
+                
+                <form id="settings-form">
+                    <div class="form-group">
+                        <label for="calendar-sheet">カレンダースプレッドシートID</label>
+                        <input type="text" id="calendar-sheet" placeholder="1ABC...XYZ" required>
+                        <small>開催日程を記録するスプレッドシートのID</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ozz-sheet">オッズ出力先スプレッドシートID</label>
+                        <input type="text" id="ozz-sheet" placeholder="1ABC...XYZ" required>
+                        <small>予想オッズを出力するスプレッドシートのID</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scraping-time">スクレイピング実行時刻</label>
+                        <input type="time" id="scraping-time" required>
+                        <small>毎日この時刻にオッズをスクレイピングします</small>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">設定を保存</button>
+                        <button type="button" id="reload-btn" class="btn btn-secondary">設定を再読み込み</button>
+                    </div>
+
+                    <div id="save-success" class="success-message"></div>
+                    <div id="save-error" class="error-message"></div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>🔐 パスワード変更</h2>
+                
+                <form id="password-form">
+                    <div class="form-group">
+                        <label for="current-password">現在のパスワード</label>
+                        <input type="password" id="current-password" placeholder="現在のパスワード" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new-password">新しいパスワード</label>
+                        <input type="password" id="new-password" placeholder="新しいパスワード" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password">新しいパスワード（確認）</label>
+                        <input type="password" id="confirm-password" placeholder="新しいパスワード（確認）" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">パスワードを変更</button>
+
+                    <div id="password-success" class="success-message"></div>
+                    <div id="password-error" class="error-message"></div>
+                </form>
+            </div>
+
+            <div class="card info-card">
+                <h2>ℹ️ 使い方</h2>
+                <ol>
+                    <li>Google スプレッドシートを2つ作成してください
+                        <ul>
+                            <li>カレンダー用: 開催日程を記録</li>
+                            <li>オッズ用: 予想オッズを出力</li>
+                        </ul>
+                    </li>
+                    <li>各スプレッドシートのIDをコピーして上記フォームに貼り付けてください
+                        <ul>
+                            <li>スプレッドシートのURLから取得: <code>https://docs.google.com/spreadsheets/d/<strong>[ここがID]</strong>/edit</code></li>
+                        </ul>
+                    </li>
+                    <li>スクレイピング時刻を設定してください（デフォルト: 09:00）</li>
+                    <li>「設定を保存」ボタンをクリック</li>
+                </ol>
+
+                <h3>📅 自動実行スケジュール</h3>
+                <ul>
+                    <li><strong>毎週月曜 00:00</strong>: 1ヶ月分の開催日程を取得</li>
+                    <li><strong>毎日 設定時刻</strong>: 翌日のレースの予想オッズを取得</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ローディング画面 -->
+        <div id="loading-screen" class="screen">
+            <div class="spinner"></div>
+            <p>読み込み中...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

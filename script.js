@@ -32,6 +32,12 @@ const passwordError = document.getElementById('password-error');
 const logoutBtn = document.getElementById('logout-btn');
 const reloadBtn = document.getElementById('reload-btn');
 
+const fetchCalendarBtn = document.getElementById('fetch-calendar-btn');
+const calendarResult = document.getElementById('calendar-result');
+const fetchOddsBtn = document.getElementById('fetch-odds-btn');
+const scrapeDateInput = document.getElementById('scrape-date');
+const oddsResult = document.getElementById('odds-result');
+
 // セッション管理
 let authToken = localStorage.getItem('keiba_auth_token') || null;
 
@@ -57,6 +63,15 @@ function showSuccess(element, message) {
     setTimeout(() => {
         element.classList.remove('show');
     }, 5000);
+}
+
+// 結果メッセージ表示（成功/エラー/情報）
+function showResult(element, message, type = 'success') {
+    element.textContent = message;
+    element.className = 'result-message show ' + type;
+    setTimeout(() => {
+        element.classList.remove('show');
+    }, 10000);
 }
 
 // API リクエスト共通処理
@@ -234,6 +249,87 @@ passwordForm.addEventListener('submit', async (e) => {
         console.error('Password change error:', error);
         showScreen(mainScreen);
         showError(passwordError, error.message);
+    }
+});
+
+// 日程取得ボタン
+fetchCalendarBtn.addEventListener('click', async () => {
+    if (!confirm('1ヶ月分の開催日程を取得します。よろしいですか？')) {
+        return;
+    }
+
+    try {
+        fetchCalendarBtn.disabled = true;
+        fetchCalendarBtn.textContent = '取得中...';
+        showResult(calendarResult, '日程を取得しています...', 'info');
+
+        const response = await fetch(`${API_URL}/calendar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || '日程取得に失敗しました');
+        }
+
+        showResult(calendarResult, `✅ 日程取得完了! ${data.races_found}件のレースを取得しました。`, 'success');
+
+    } catch (error) {
+        console.error('Calendar fetch error:', error);
+        showResult(calendarResult, `❌ エラー: ${error.message}`, 'error');
+    } finally {
+        fetchCalendarBtn.disabled = false;
+        fetchCalendarBtn.textContent = '日程を取得';
+    }
+});
+
+// オッズ取得ボタン
+fetchOddsBtn.addEventListener('click', async () => {
+    const dateValue = scrapeDateInput.value;
+
+    if (!dateValue) {
+        showResult(oddsResult, '❌ 日付を選択してください', 'error');
+        return;
+    }
+
+    if (!confirm(`${dateValue} のオッズを取得します。よろしいですか？`)) {
+        return;
+    }
+
+    try {
+        fetchOddsBtn.disabled = true;
+        fetchOddsBtn.textContent = '取得中...';
+        showResult(oddsResult, 'オッズを取得しています...', 'info');
+
+        const response = await fetch(`${API_URL}/api/scrape-manual`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': authToken
+            },
+            body: JSON.stringify({
+                date: dateValue
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'オッズ取得に失敗しました');
+        }
+
+        showResult(oddsResult, `✅ オッズ取得完了! ${data.races_processed}レースを処理しました。`, 'success');
+
+    } catch (error) {
+        console.error('Odds fetch error:', error);
+        showResult(oddsResult, `❌ エラー: ${error.message}`, 'error');
+    } finally {
+        fetchOddsBtn.disabled = false;
+        fetchOddsBtn.textContent = 'オッズを取得';
     }
 });
 

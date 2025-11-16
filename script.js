@@ -1,5 +1,5 @@
 // API URL管理
-let API_URL = localStorage.getItem('keiba_api_url') || '';
+let API_URL = localStorage.getItem('https://keiba-scraper-fbqowedyyq-an.a.run.app') || '';
 
 // DOM要素
 const loginScreen = document.getElementById('login-screen');

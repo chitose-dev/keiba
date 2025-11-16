@@ -1,5 +1,10 @@
+// ========================================
+// 🔧 ここにCloud RunのAPI URLを設定してください
+// ========================================
+const DEFAULT_API_URL = 'https://keiba-scraper-fbqowedyyq-an.a.run.app'; // ← deploy.sh実行後に表示されるURLに変更
+
 // API URL管理
-let API_URL = localStorage.getItem('https://keiba-scraper-fbqowedyyq-an.a.run.app') || '';
+let API_URL = localStorage.getItem('keiba_api_url') || DEFAULT_API_URL;
 
 // DOM要素
 const loginScreen = document.getElementById('login-screen');
@@ -9,11 +14,6 @@ const loadingScreen = document.getElementById('loading-screen');
 const loginForm = document.getElementById('login-form');
 const passwordInput = document.getElementById('password');
 const loginError = document.getElementById('login-error');
-
-const apiUrlInput = document.getElementById('api-url');
-const saveApiUrlBtn = document.getElementById('save-api-url');
-const apiUrlSuccess = document.getElementById('api-url-success');
-const apiUrlError = document.getElementById('api-url-error');
 
 const settingsForm = document.getElementById('settings-form');
 const calendarSheetInput = document.getElementById('calendar-sheet');
@@ -92,32 +92,9 @@ async function apiRequest(endpoint, method = 'GET', body = null, requiresAuth = 
     return data;
 }
 
-// API URL保存
-saveApiUrlBtn.addEventListener('click', () => {
-    const url = apiUrlInput.value.trim();
-    
-    if (!url) {
-        showError(apiUrlError, 'URLを入力してください');
-        return;
-    }
-
-    // URLの正規化（末尾のスラッシュを削除）
-    const normalizedUrl = url.replace(/\/$/, '');
-    
-    API_URL = normalizedUrl;
-    localStorage.setItem('keiba_api_url', normalizedUrl);
-    
-    showSuccess(apiUrlSuccess, 'API URLを保存しました!');
-});
-
 // ログイン処理
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
-    if (!API_URL) {
-        showError(loginError, '先にAPI URLを設定してください');
-        return;
-    }
     
     const password = passwordInput.value;
     
@@ -262,11 +239,6 @@ passwordForm.addEventListener('submit', async (e) => {
 
 // 初期化
 document.addEventListener('DOMContentLoaded', () => {
-    // 保存されたAPI URLを読み込み
-    if (API_URL) {
-        apiUrlInput.value = API_URL;
-    }
-    
     // 認証トークンがある場合は自動ログイン試行
     if (authToken && API_URL) {
         (async () => {

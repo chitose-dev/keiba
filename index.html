@@ -11,7 +11,7 @@
         <!-- ログイン画面 -->
         <div id="login-screen" class="screen active">
             <div class="card">
-                <h1>🏇 競馬スクレイピング設定</h1>
+                <h1>競馬スクレイピング設定</h1>
                 <p class="subtitle">管理画面にログインしてください</p>
                 
                 <form id="login-form">
@@ -30,22 +30,22 @@
         <!-- メイン設定画面 -->
         <div id="main-screen" class="screen">
             <div class="header">
-                <h1>🏇 競馬スクレイピング設定</h1>
+                <h1>競馬スクレイピング設定</h1>
                 <button id="logout-btn" class="btn btn-secondary">ログアウト</button>
             </div>
 
             <div class="card">
-                <h2>🎮 手動実行</h2>
+                <h2>手動実行</h2>
                 
                 <div class="manual-section">
-                    <h3>📅 日程取得</h3>
+                    <h3>日程取得</h3>
                     <p>1ヶ月分の競馬開催日程を取得してFirestoreとスプレッドシートに保存します。</p>
                     <button id="fetch-calendar-btn" class="btn btn-primary">日程を取得</button>
                     <div id="calendar-result" class="result-message"></div>
                 </div>
 
                 <div class="manual-section">
-                    <h3>🏇 オッズ取得</h3>
+                    <h3>オッズ取得</h3>
                     <p>指定した日付のレースIDを取得してオッズをスクレイピングします。</p>
                     <div class="form-group">
                         <label for="scrape-date">取得日付</label>
@@ -58,7 +58,7 @@
             </div>
 
             <div class="card">
-                <h2>📊 基本設定</h2>
+                <h2>基本設定</h2>
                 
                 <form id="settings-form">
                     <div class="form-group">
@@ -90,7 +90,7 @@
             </div>
 
             <div class="card">
-                <h2>🔐 パスワード変更</h2>
+                <h2>パスワード変更</h2>
                 
                 <form id="password-form">
                     <div class="form-group">
@@ -116,7 +116,7 @@
             </div>
 
             <div class="card info-card">
-                <h2>ℹ️ 使い方</h2>
+                <h2>使い方</h2>
                 <ol>
                     <li>Google スプレッドシートを2つ作成してください
                         <ul>
@@ -134,7 +134,7 @@
                     <li>対象スプレッドシートを開き、「共有」から<code>automail-476405@appspot.gserviceaccount.com</code>を編集者として権限を付与</li>
                 </ol>
 
-                <h3>📅 自動実行スケジュール</h3>
+                <h3>自動実行スケジュール</h3>
                 <ul>
                     <li><strong>毎週月曜 00:00</strong>: 1ヶ月分の開催日程を取得</li>
                     <li><strong>毎日 設定時刻</strong>: 翌日のレースの予想オッズを取得</li>

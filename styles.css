@@ -69,6 +69,13 @@ body {
     padding-bottom: 12px;
 }
 
+.card h3 {
+    color: #000;
+    margin-bottom: 12px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
 .subtitle {
     text-align: center;
     color: #666;
@@ -125,15 +132,21 @@ body {
     width: 100%;
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
     background: #333;
     transform: translate(-2px, -2px);
     box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
-.btn-primary:active {
+.btn-primary:active:not(:disabled) {
     transform: translate(0, 0);
     box-shadow: none;
+}
+
+.btn-primary:disabled {
+    background: #666;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 .btn-secondary {
@@ -156,7 +169,8 @@ body {
 }
 
 .error-message,
-.success-message {
+.success-message,
+.result-message {
     margin-top: 16px;
     padding: 12px;
     border: 2px solid;
@@ -165,21 +179,48 @@ body {
     display: none;
 }
 
-.error-message {
+.error-message,
+.result-message.error {
     background: #fff;
     color: #d00;
     border-color: #d00;
 }
 
-.success-message {
+.success-message,
+.result-message.success {
     background: #fff;
     color: #0a0;
     border-color: #0a0;
 }
 
+.result-message.info {
+    background: #fff;
+    color: #0066cc;
+    border-color: #0066cc;
+}
+
 .error-message.show,
-.success-message.show {
+.success-message.show,
+.result-message.show {
     display: block;
+}
+
+.manual-section {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #ddd;
+}
+
+.manual-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.manual-section p {
+    margin-bottom: 16px;
+    color: #666;
+    line-height: 1.6;
 }
 
 .info-card {

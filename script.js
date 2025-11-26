@@ -65,7 +65,7 @@ function showSuccess(element, message) {
     }, 5000);
 }
 
-// 結果メッセージ表示（成功/エラー/情報）
+// 結果メッセージ表示(成功/エラー/情報)
 function showResult(element, message, type = 'success') {
     element.textContent = message;
     element.className = 'result-message show ' + type;
@@ -296,14 +296,18 @@ fetchOddsBtn.addEventListener('click', async () => {
         return;
     }
 
-    if (!confirm(`${dateValue} のオッズを取得します。よろしいですか？`)) {
+    if (!confirm(`${dateValue} のオッズを取得します。よろしいですか？\n\n※処理に数分〜10分程度かかる場合があります。`)) {
         return;
     }
 
     try {
         fetchOddsBtn.disabled = true;
         fetchOddsBtn.textContent = '取得中...';
-        showResult(oddsResult, 'オッズを取得しています...', 'info');
+        showResult(oddsResult, 'オッズを取得しています...(数分かかる場合があります)', 'info');
+
+        // タイムアウトを30分に設定
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30 * 60 * 1000); // 30分
 
         const response = await fetch(`${API_URL}/api/scrape-manual`, {
             method: 'POST',
@@ -313,8 +317,11 @@ fetchOddsBtn.addEventListener('click', async () => {
             },
             body: JSON.stringify({
                 date: dateValue
-            })
+            }),
+            signal: controller.signal
         });
+
+        clearTimeout(timeoutId);
 
         const data = await response.json();
 
@@ -326,7 +333,11 @@ fetchOddsBtn.addEventListener('click', async () => {
 
     } catch (error) {
         console.error('Odds fetch error:', error);
-        showResult(oddsResult, `❌ エラー: ${error.message}`, 'error');
+        if (error.name === 'AbortError') {
+            showResult(oddsResult, `❌ タイムアウト: 処理に時間がかかりすぎました。レース数が多い場合は、Cloud Runのログを確認してください。`, 'error');
+        } else {
+            showResult(oddsResult, `❌ エラー: ${error.message}`, 'error');
+        }
     } finally {
         fetchOddsBtn.disabled = false;
         fetchOddsBtn.textContent = 'オッズを取得';

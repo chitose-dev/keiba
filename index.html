@@ -46,7 +46,7 @@
 
                 <div class="manual-section">
                     <h3>オッズ取得</h3>
-                    <p>指定した日付のレースIDを取得してオッズをスクレイピングします。</p>
+                    <p>指定した日付のレースIDを取得してオッズをスクレイピングし、Firestoreに保存します。</p>
                     <div class="form-group">
                         <label for="scrape-date">取得日付</label>
                         <input type="date" id="scrape-date" required>
@@ -65,12 +65,6 @@
                         <label for="calendar-sheet">カレンダースプレッドシートID</label>
                         <input type="text" id="calendar-sheet" placeholder="1ABC...XYZ" required>
                         <small>開催日程を記録するスプレッドシートのID</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="ozz-sheet">オッズ出力先スプレッドシートID</label>
-                        <input type="text" id="ozz-sheet" placeholder="1ABC...XYZ" required>
-                        <small>予想オッズを出力するスプレッドシートのID</small>
                     </div>
 
                     <div class="form-group">
@@ -118,13 +112,12 @@
             <div class="card info-card">
                 <h2>使い方</h2>
                 <ol>
-                    <li>Google スプレッドシートを2つ作成してください
+                    <li>Google スプレッドシートを1つ作成してください
                         <ul>
-                            <li>カレンダー用: 開催日程を記録</li>
-                            <li>オッズ用: 予想オッズを出力</li>
+                            <li>カレンダー用: 開催日程を記録（開催日の前日を保存）</li>
                         </ul>
                     </li>
-                    <li>各スプレッドシートのIDをコピーして上記フォームに貼り付けてください
+                    <li>スプレッドシートのIDをコピーして上記フォームに貼り付けてください
                         <ul>
                             <li>スプレッドシートのURLから取得: <code>https://docs.google.com/spreadsheets/d/<strong>[ここがID]</strong>/edit</code></li>
                         </ul>
@@ -137,8 +130,19 @@
                 <h3>自動実行スケジュール</h3>
                 <ul>
                     <li><strong>毎週月曜 00:00</strong>: 1ヶ月分の開催日程を取得</li>
-                    <li><strong>毎日 設定時刻</strong>: 翌日のレースの予想オッズを取得</li>
+                    <li><strong>毎日 設定時刻</strong>: 翌日のレースの予想オッズを取得してFirestoreに保存</li>
                 </ul>
+
+                <h3>Firestoreデータ構造</h3>
+                <p>オッズは以下の構造でFirestoreに保存されます:</p>
+                <pre><code>keiba/
+  ozz/
+    {レースID}/
+      {馬番}/
+        horse_name: "馬名"
+        ozz: オッズ（数値）
+        rank: 人気順位（数値）
+        updated_at: タイムスタンプ</code></pre>
             </div>
         </div>
 

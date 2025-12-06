@@ -17,7 +17,6 @@ const loginError = document.getElementById('login-error');
 
 const settingsForm = document.getElementById('settings-form');
 const calendarSheetInput = document.getElementById('calendar-sheet');
-const ozzSheetInput = document.getElementById('ozz-sheet');
 const scrapingTimeInput = document.getElementById('scraping-time');
 const saveSuccess = document.getElementById('save-success');
 const saveError = document.getElementById('save-error');
@@ -146,7 +145,6 @@ async function loadSettings() {
         const data = await apiRequest('/api/settings', 'GET', null, true);
         
         calendarSheetInput.value = data.calendar || '';
-        ozzSheetInput.value = data.ozz_sheet || '';
         scrapingTimeInput.value = data.scraping_time || '09:00';
         
     } catch (error) {
@@ -173,11 +171,10 @@ settingsForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const calendarSheet = calendarSheetInput.value.trim();
-    const ozzSheet = ozzSheetInput.value.trim();
     const scrapingTime = scrapingTimeInput.value;
     
     // バリデーション
-    if (!calendarSheet || !ozzSheet || !scrapingTime) {
+    if (!calendarSheet || !scrapingTime) {
         showError(saveError, 'すべてのフィールドを入力してください。');
         return;
     }
@@ -187,7 +184,6 @@ settingsForm.addEventListener('submit', async (e) => {
         
         await apiRequest('/api/settings', 'POST', {
             calendar: calendarSheet,
-            ozz_sheet: ozzSheet,
             scraping_time: scrapingTime
         }, true);
         
@@ -329,7 +325,7 @@ fetchOddsBtn.addEventListener('click', async () => {
             throw new Error(data.error || 'オッズ取得に失敗しました');
         }
 
-        showResult(oddsResult, `✅ オッズ取得完了! ${data.races_processed}レースを処理しました。`, 'success');
+        showResult(oddsResult, `✅ オッズ取得完了! ${data.races_processed}レースを処理しました。Firestoreに保存されました。`, 'success');
 
     } catch (error) {
         console.error('Odds fetch error:', error);

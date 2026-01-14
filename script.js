@@ -325,7 +325,7 @@ fetchOddsBtn.addEventListener('click', async () => {
             throw new Error(data.error || 'オッズ取得に失敗しました');
         }
 
-        showResult(oddsResult, `✅ オッズ取得完了! ${data.races_processed}レースを処理しました。Firestoreに保存されました。`, 'success');
+        showResult(oddsResult, `✅ オッズ取得完了! 成功: ${data.races_success}件, 失敗: ${data.races_failed}件`, 'success');
 
     } catch (error) {
         console.error('Odds fetch error:', error);
